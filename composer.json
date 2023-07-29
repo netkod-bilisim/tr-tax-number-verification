@@ -1,0 +1,35 @@
+{
+  "name": "netkod-bilisim/tr-tax-number-faker",
+  "description": "It checks the TR Tax Number.",
+  "keywords": [
+    "tr",
+    "tax number",
+    "tax number verification",
+    "validate tr tax number",
+    "validate tr tax number with php",
+    "validate tr tax number with laravel"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Remzi DALYAN",
+      "email": "remzi.dalyan@netkodbilisim.com",
+      "role": "Software Engineer"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "ext-json": "*",
+    "guzzlehttp/guzzle": "7.2",
+    "netkod-bilisim/tr-tax-number-validation": "1",
+    "netkod-bilisim/tr-identity-number-validation": "1",
+    "netkod-bilisim/tr-string": "1"
+  },
+  "autoload": {
+    "files": [
+      "./src/TrTaxNumberVerification.php"
+    ]
+  },
+  "minimum-stability": "dev"
+}
