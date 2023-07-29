@@ -18,47 +18,47 @@ class TrTaxNumberVerification
 
     public static function verify(int $company_type, string $tax_number, string $tax_office_no)
     {
-        if (!in_array($company_type, [1, 2])) {
+        if (! in_array($company_type, [1, 2])) {
             return static::errorResponse(1);
         }
 
-        if (($company_type === 1 && !TrTaxNumberValidation::validate($tax_number)) || ($company_type === 2 && !TrIdentityNumberValidation::validate($tax_number))) {
+        if (($company_type === 1 && ! TrTaxNumberValidation::validate($tax_number)) || ($company_type === 2 && ! TrIdentityNumberValidation::validate($tax_number))) {
             return static::errorResponse(2);
         }
 
         $jp = static::makeQuery($company_type, $tax_number, $tax_office_no);
-        $response = static::getClient()->post(static::API_URL . '/dispatch', [
+        $response = static::getClient()->post(static::API_URL.'/dispatch', [
             'query' => [
                 'cmd' => 'vergiNoIslemleri_vergiNumarasiSorgulama',
                 'token' => static::getToken(),
                 'jp' => json_encode($jp),
-            ]
+            ],
         ]);
         $response = json_decode($response->getBody());
 
         if (isset($response->error)) {
             return static::errorResponse(3);
-        } else if (isset($response->data) && !isset($response->data->durum)) {
+        } else if (isset($response->data) && ! isset($response->data->durum)) {
             return static::errorResponse(4);
         }
 
-        return (object)[
+        return (object) [
             'status' => true,
-            'data' => (object)[
+            'data' => (object) [
                 'title' => $response->data->unvan,
                 'tax_no' => $response->data->vkn,
-            ]
+            ],
         ];
     }
 
     public static function errorResponse(int $errorCode): object
     {
-        return (object)[
+        return (object) [
             'status' => false,
-            'error' => (object)[
+            'error' => (object) [
                 'code' => $errorCode,
-                'description' => static::$errorCodeList[$errorCode]
-            ]
+                'description' => static::$errorCodeList[$errorCode],
+            ],
         ];
     }
 
@@ -77,7 +77,7 @@ class TrTaxNumberVerification
                 'vkn1' => $vkn1,
                 'tckn1' => $tckn1,
                 'vergidaireleri' => $tax_office_no,
-            ]
+            ],
         ];
     }
 
@@ -96,12 +96,12 @@ class TrTaxNumberVerification
             return static::$token;
         }
 
-        $response = static::getClient()->post(static::API_URL . '/assos-login', [
+        $response = static::getClient()->post(static::API_URL.'/assos-login', [
             'query' => [
                 'assoscmd' => 'cfsession',
                 'fskey' => 'intvrg.fix.session',
                 'fuserid' => 'INTVRG_FIX',
-            ]
+            ],
         ]);
 
         return static::$token = json_decode($response->getBody())->token;
